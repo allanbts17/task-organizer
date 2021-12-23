@@ -1,0 +1,33 @@
+
+<ion-content>
+  <div class="overflow-x-auto schedule">
+  <div class="divide-y" style="min-width: 800px;">
+    <div class="grid grid-cols-8 font-extrabold text-white bg-emerald-700 rounded-t-xl overflow-hidden">
+      <div class="pl-2 my-2">Hora</div>
+      <div class="pl-2 my-2">Domingo</div>
+      <div class="pl-2 my-2">Lunes</div>
+      <div class="pl-2 my-2">Martes</div>
+      <div class="pl-2 my-2">Miércoles</div>
+      <div class="pl-2 my-2">Jueves</div>
+      <div class="pl-2 my-2">Viernes</div>
+      <div class="pl-2 my-2">Sábado</div>
+    </div>
+
+    <div *ngFor="let hour of hours" class="grid grid-cols-8 divide-x text-black align-middle">
+
+        <div class="pl-2 my-2 align-middle">{{hour.hora}}</div>
+        <div class="pl-2 my-2 align-middle">{{hour.domingo}}</div>
+        <div class="pl-2 my-2 align-middle">{{hour.lunes}}</div>
+        <div class="pl-2 my-2 align-middle">{{hour.martes}}</div>
+        <div class="pl-2 my-2 align-middle">{{hour.miercoles}}</div>
+        <div class="pl-2 my-2 align-middle">{{hour.jueves}}</div>
+        <div class="pl-2 my-2 align-middle">{{hour.viernes}}</div>
+        <div class="pl-2  my-2 align-middle">{{hour.sabado}}</div>
+
+    </div>
+  </div>
+</div>
+
+<ion-button (click)="addData()">Add data</ion-button>
+<div class="bg-sky-400 h-40 w-40"  ></div>
+</ion-content>

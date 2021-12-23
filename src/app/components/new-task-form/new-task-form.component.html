@@ -1,0 +1,50 @@
+<ion-content>
+  <ion-list>
+    <ion-list-header>
+      Ingresa la nueva tarea
+    </ion-list-header>
+    <ion-item>
+      <ion-label>Tarea</ion-label>
+      <ion-input placeholder="" [(ngModel)]="newTask.tarea"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Domingo</ion-label>
+      <ion-input inputmode="numeric" placeholder=0 [(ngModel)]="newTask.domingo"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Lunes</ion-label>
+      <ion-input inputmode="numeric" placeholder=0 [(ngModel)]="newTask.lunes"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Martes</ion-label>
+      <ion-input inputmode="numeric" placeholder=0 [(ngModel)]="newTask.martes"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Miércoles</ion-label>
+      <ion-input inputmode="numeric" placeholder=0 [(ngModel)]="newTask.miercoles"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Jueves</ion-label>
+      <ion-input inputmode="numeric" placeholder=0 [(ngModel)]="newTask.jueves"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Viernes</ion-label>
+      <ion-input inputmode="numeric" placeholder=0 [(ngModel)]="newTask.viernes"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label>Sábado</ion-label>
+      <ion-input inputmode="numeric" placeholder=0 [(ngModel)]="newTask.sabado"></ion-input>
+    </ion-item>
+  </ion-list>
+  <div class="my-3 flex justify-around">
+    <ion-button size="small" shape="round" (click)="saveNewTask()">
+      <ion-icon slot="start" name="save"></ion-icon>
+      <ion-label>Guardar</ion-label>
+    </ion-button>
+    <ion-button size="small" shape="round" (click)="closeModal()">
+      <ion-icon slot="start" name="create"></ion-icon>
+      <ion-label>Cancelar</ion-label>
+    </ion-button>
+  </div>
+
+</ion-content>
