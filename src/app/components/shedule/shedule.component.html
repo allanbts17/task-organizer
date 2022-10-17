@@ -15,7 +15,7 @@
 
     <div *ngFor="let hour of hours" class="grid grid-cols-8 divide-x text-black align-middle">
 
-        <div class="pl-2 my-2 align-middle">{{hour.hora}}</div>
+        <div class="pl-2 my-2 align-middle">{{format(hour.hora,'hh:mm agit')}}</div>
         <div class="pl-2 my-2 align-middle">{{hour.domingo}}</div>
         <div class="pl-2 my-2 align-middle">{{hour.lunes}}</div>
         <div class="pl-2 my-2 align-middle">{{hour.martes}}</div>

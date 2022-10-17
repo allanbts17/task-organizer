@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { apiService } from 'src/app/services/api.service';
+import { addMinutes } from 'date-fns'
+import { Hour } from 'src/app/interfaces/hour';
+import { format } from 'date-fns'
 
+const hoursQuantity = 37
+const startingHour = new Date(0, 0, 0, 6, 0, 0)
 @Component({
   selector: 'app-shedule',
   templateUrl: './shedule.component.html',
@@ -12,9 +17,6 @@ export class SheduleComponent implements OnInit {
   constructor(private apiService: apiService) { }
 
   ngOnInit() {
-    //this.createTask()
-   //this.deleteTask('6')
-   //this.updateTask()
     this.getSchedule()
   }
 
@@ -25,9 +27,46 @@ export class SheduleComponent implements OnInit {
   getSchedule() {
     this.apiService.getSchedule()
     .then((hours) => {
-      this.hours = <any>hours
+      let date
+      let difference = hoursQuantity - hours.length
+      console.log(difference,hours)
+      if(hours.length > 0){
+        date = new Date(hours[-1].hora)
+      } else {
+        date = startingHour
+      }
+      let nextHours: Hour[] = this.fillNextHours(date,difference)
+      this.hours = <Hour[]>hours.concat(nextHours)
       console.log(this.hours);
     });
+  }
+
+  fillNextHours(startHour: Date, quantity: number): Hour[]{
+    let arr = [this.getEmptyHour(startHour)]
+    let dateArr = [startHour]
+    for(let i=1;i<quantity;i++){
+      let add = addMinutes(dateArr[i-1], 30)
+      arr.push(this.getEmptyHour(add))
+      dateArr.push(add)
+    }
+    return arr
+  }
+
+  getEmptyHour(date: Date): Hour{
+    return {
+      hora: date.toISOString(),
+      domingo: '',
+      lunes: '',
+      martes: '',
+      miercoles: '',
+      jueves: '',
+      viernes: '',
+      sabado: ''
+    }
+  }
+
+  format(date,pattern){
+    return format(new Date(date),pattern)
   }
 
   getHour() {

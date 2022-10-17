@@ -54,7 +54,7 @@ export class apiService {
     return docRef
   }
 
-  async getSchedule(){
+  async getSchedule(): Promise<Hour[]>{
     let sheduleArr = [];
     const docSnapshot = await this.afs.collection(SCHEDULE).get().toPromise()
     console.log('snap',docSnapshot)
