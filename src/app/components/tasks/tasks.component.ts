@@ -87,17 +87,21 @@ export class TasksComponent implements OnInit {
   }
 
   updateTotal(id){
-    this.tasks[id]
+   //console.log('called')
+    this.tasks[id].total = 0
     let sum = 0
-    const times = Object.values(this.tasks[id]).slice(2,8);
-    times.forEach(time => {
-      sum += Number(time)
+    const values = Object.values(this.tasks[id]);
+    values.forEach(value => {
+      if(typeof value == 'number')
+        sum += value
     })
-    this.tasks[id].total = sum.toString()
+    //console.log(sum)
+    //console.log(values)
+    this.tasks[id].total = sum
     setTimeout(()=>this.updateHoursLeft(),200)
   }
 
-  setHoursSum(day){
+  private setHoursSum(day){
     let sum = 0
     this.tasks.forEach(task=>{
       sum += task[day]
@@ -106,14 +110,8 @@ export class TasksComponent implements OnInit {
   }
 
   updateHoursLeft(){
-    this.hoursLeft = {
-      domingo:this.activeHours-this.setHoursSum('domingo'),
-      lunes:this.activeHours-this.setHoursSum('lunes'),
-      martes:this.activeHours-this.setHoursSum('martes'),
-      miercoles:this.activeHours-this.setHoursSum('miercoles'),
-      jueves:this.activeHours-this.setHoursSum('jueves'),
-      viernes:this.activeHours-this.setHoursSum('viernes'),
-      sabado:this.activeHours-this.setHoursSum('sabado'),
+    for(let day in this.hoursLeft){
+      this.hoursLeft[day] = this.activeHours - this.setHoursSum(day)
     }
   }
 
@@ -134,23 +132,15 @@ export class TasksComponent implements OnInit {
     this.tasks[i].selected = false
   }
 
-  getAllTasks() {
-    this.apiService.getAllTasks().subscribe((tasks) => {
-      this.auxTasks = tasks
-      this.auxTasks.forEach((task)=>{
-        console.log(task.lunes,typeof task.lunes)
-        let sum = 0
-        const times = Object.values(task).slice(2,9);
-        times.forEach(time => {
-          sum += Number(time)
-        })
-        task.total = sum.toString()
-        task.selected = false
-      })
-      this.tasks = this.deepCopy(this.auxTasks)
+  async getAllTasks() {
+    this.auxTasks = await this.apiService.getAllTasks()
+    this.auxTasks.forEach((task)=>{
+      task.selected = false
+    })
+
+    this.tasks = this.deepCopy(this.auxTasks)
       this.updateHoursLeft()
       console.log(this.tasks);
-    });
   }
 
   cancelEdit(){
@@ -163,90 +153,28 @@ export class TasksComponent implements OnInit {
     return JSON.parse(JSON.stringify(array))
   }
 
-  updateTask(task) {
-    let newTask = omit(task,['selected','total'])
-    console.log('new',newTask)
-    this.apiService.updateTask(task)
-    .subscribe(data => {
-      this.taskCount++
-      if(this.taskCount == this.tasks.length)
-        this.toogleEdit = false
-      //console.log(data);
-    });
+  async updateTask(task) {
+    let newTask = omit(task,['selected'])
+    //console.log('new',newTask)
+    await this.apiService.updateTask(task,task.id)
   }
 
-  updateAllTasks(){
-    this.tasks.forEach(task => this.updateTask(task))
-  }
-
-  deleteTask(id: number) {
-    console.log(id,typeof id)
-    this.tasks = this.deepCopy(this.tasks.filter(task=>task.id != id))
-  /*  this.apiService.deleteTask(id)
-    .subscribe((data) => {
-      console.log(data);
-    });*/
-  }
-
-    /* fill(){
-    const task = {
-      hora: '8:00 AM',
-      domingo: 'Tareas casa',
-      lunes: 'Ejercicio',
-      martes: 'Tesis',
-      miercoles: 'Ejercicio',
-      jueves: 'Ejercicio',
-      viernes: 'Tesis',
-      sabado: 'Lectura cristiana'
-    };
-    this.apiService.createTask(task)
-    .subscribe((newTask) => {
-      console.log(newTask);
-    });
-  }*/
- /* createTask() {
-    const task = {
-      hora: '9:30 AM',
-      domingo: 'Tareas casa',
-      lunes: 'Tesis',
-      martes: 'Tesis',
-      miercoles: 'Tesis',
-      jueves: 'Tesis',
-      viernes: 'Tesis',
-      sabado: 'Práctica piano'
-
-    };
-    this.apiService.createTask(task)
-    .subscribe((newTask) => {
-      console.log(newTask);
-    });
-  }
-
-  updateTask() {
-    const task = {
-      id: 5,
-      hora: '8:00 AM',
-      domingo: 'Tareas casa',
-      lunes: 'Ejercicio',
-      martes: 'Tesis',
-      miercoles: 'Ejercicio',
-      jueves: 'Ejercicio',
-      viernes: 'Tesis',
-      sabado: 'Lectura cristiana'
-    };
-    this.apiService.updateTask(task)
-    .subscribe(todo => {
-      console.log(todo);
-    });
+  async updateAllTasks(){
+    for(let task of this.tasks){
+      await this.updateTask(task)
+    }
+    this.toogleEdit = false
+    //this.tasks.forEach(task => this.updateTask(task))
   }
 
   deleteTask(id: string) {
+    console.log(id,typeof id)
+    this.tasks = this.deepCopy(this.tasks.filter(task=>task.id != id))
     this.apiService.deleteTask(id)
-    .subscribe((data) => {
+    .then((data) => {
+      this.getAllTasks();
       console.log(data);
     });
   }
-
-  }*/
 
 }

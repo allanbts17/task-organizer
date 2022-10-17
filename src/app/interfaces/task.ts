@@ -1,5 +1,5 @@
 export interface Task {
-  id?: number;
+  id?: string;
   tarea: string;
   domingo: number;
   lunes: number;
@@ -8,4 +8,6 @@ export interface Task {
   jueves: number;
   viernes: number;
   sabado: number;
+  total?: number;
+  selected?: boolean;
 }

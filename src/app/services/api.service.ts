@@ -1,74 +1,87 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Task } from '../interfaces/task';
 import { Hour } from '../interfaces/hour';
-import { HTTP_OPTIONS } from './header.config'
+import { Observable } from 'rxjs';
+import { collection, doc, getDocs, setDoc, getFirestore, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+const TASKS = 'Tasks';
+const SCHEDULE = 'Schedule';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class apiService {
- // private api = 'https://jsonplaceholder.typicode.com';
- // private category = 'todos';
+  private tasksCollection: AngularFirestoreCollection<Task>;
+  private scheduleCollection: AngularFirestoreCollection<Hour>;
+  tasks: Observable<Task[]>;
+  hours: Observable<Hour[]>;
 
- private api = 'https://blooming-stream-92170.herokuapp.com/api';
- private category = 'horarios';
- private task = 'tasks';
- private schedule = 'horarios';
-
-  constructor(private http: HttpClient) { }
-
-  getAllTasks() {
-    const path = `${this.api}/${this.task}/`;
-    /*var reqHeader = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Im45N2VRbl81MTdTalEyeWdBdkpOYyJ9.eyJpc3MiOiJodHRwczovL2Rldi1meDZwcXJocy51cy5hdXRoMC5jb20vIiwic3ViIjoiMjA3SXg1em1yTDBkQkdlQ2pjRGlXZHBubUFWWG41cHlAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vbGFyYXZlbC1zaGVkdWxlLWFwaSIsImlhdCI6MTYzNjYwNDQ4NiwiZXhwIjoxNjM2NjkwODg2LCJhenAiOiIyMDdJeDV6bXJMMGRCR2VDamNEaVdkcG5tQVZYbjVweSIsImd0eSI6ImNsaWVudC1jcmVkZW50aWFscyJ9.YM2zNmyviRiFJm1mNmtm7FdB4z9UlMPnG8Hvy5q3sgtVeVBLm1alOw0GOMSdIyOb8wFuQwiTekifeMAteLGtqlBv5_VulRdZUYDMgClzW1kAEE6AQislFvEF8P_IAf_xxTFC4TWVpqbSpJVR86SBjQHhIE9vAPRAT8thBU42gWdEJNcrU42vxJkzqcf7I70DdZ2MyNgnDIEAnZBddTkMqMnJyOsbeSU4DyXv03ejepW6_jS_MY-opFikcRv9ON7lJVv6y1ok4k8dIAvyEUwVDN0zK7rXQAnw4x6Fei_YPgrivYyuz36Rh0-YfdnySNwdkBV4uQxuhNz0uTfpv0V66g'
-   });*/
-  return this.http.get<Task[]>(path);
+  constructor(private afs: AngularFirestore) {
+    this.tasksCollection = afs.collection<Task>(TASKS);
+    this.scheduleCollection = afs.collection<Hour>(SCHEDULE);
+    //this.tasks = this.tasksCollection.valueChanges();
+    //this.hours = this.scheduleCollection.valueChanges();
   }
 
-  getSchedule(){
-    const path = `${this.api}/${this.schedule}/`;
-    return this.http.get<Hour[]>(path);
+  async getAllTasks() {
+    let taskArr = [];
+   // return this.afs.collection(TASKS).get().toPromise()
+    const querySnapshot = await this.afs.collection(TASKS).get().toPromise()
+    querySnapshot.forEach((doc: any) => {
+      taskArr.push({id:doc.id, ...doc.data()})
+      //console.log(doc.id, " => ", doc.data());
+    });
+    return taskArr;
   }
 
-  getHour(id: string){
-    const path = `${this.api}/${this.schedule}/${id}`;
-    return this.http.get<Hour>(path);
+  async getTask(id: string) {
+    const querySnapshot = await this.afs.collection(TASKS).doc(id).get().toPromise()
+    return querySnapshot.data();
   }
 
-  getTask(id: string) {
-    const path = `${this.api}/${this.task}/${id}`;
-    return this.http.get<Task>(path);
+  async createTask(task: Task) {
+    return await this.tasksCollection.add(task);
   }
 
-  createHour(hour: Hour) {
-    const path = `${this.api}/${this.schedule}`;
-    return this.http.post(path, hour);
+  async updateTask(data: any, id: string) {
+    const docRef = await this.tasksCollection.doc(id).update(data)// doc(collection(getFirestore(), TASKS));
+    return docRef//updateDoc(docRef,data);
   }
 
-  createTask(task: Task) {
-    const path = `${this.api}/${this.task}`;
-    return this.http.post(path, task);
+  async deleteTask(id: string) {
+    const docRef = await this.tasksCollection.doc(id).delete()
+    return docRef
   }
 
-  updateHour(hour: Hour) {
-    const path = `${this.api}/${this.schedule}/${hour.id}`;
-    return this.http.put<Hour>(path, hour);
+  async getSchedule(){
+    let sheduleArr = [];
+    const docSnapshot = await this.afs.collection(SCHEDULE).get().toPromise()
+    console.log('snap',docSnapshot)
+    docSnapshot.forEach((doc: any) => {
+      sheduleArr.push({id:doc.id, ...doc.data() })
+    });
+    return sheduleArr;
   }
 
-  updateTask(task: Task) {
-    const path = `${this.api}/${this.task}/${task.id}`;
-    return this.http.put<Task>(path, task);
+  async getHour(id: string){
+    const querySnapshot = await this.afs.collection(SCHEDULE).doc(id).get().toPromise()
+    return querySnapshot.data();
   }
 
-  deleteHour(id: string) {
-    const path = `${this.api}/${this.schedule}/${id}`;
-    return this.http.delete(path);
+  async createHour(hour: Hour) {
+    return await this.scheduleCollection.add(hour);
   }
 
-  deleteTask(id: string) {
-    const path = `${this.api}/${this.task}/${id}`;
-    return this.http.delete(path);
+  async updateHour(data: any,id: string) {
+    const docRef = await this.scheduleCollection.doc(id).update(data)
+    return docRef//await updateDoc(docRef,data);
   }
+
+  async deleteHour(id: string) {
+    const docRef = await this.scheduleCollection.doc(id).delete()
+    return docRef//await deleteDoc(doc(getFirestore(), SCHEDULE, id));
+  }
+
+
 }

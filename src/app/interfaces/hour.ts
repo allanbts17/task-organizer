@@ -1,5 +1,5 @@
 export interface Hour {
-  id?: number;
+  id?: string;
   hora: string;
   domingo: string;
   lunes: string;

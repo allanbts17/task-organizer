@@ -24,15 +24,15 @@ export class SheduleComponent implements OnInit {
 
   getSchedule() {
     this.apiService.getSchedule()
-    .subscribe((hours) => {
-      this.hours = hours
+    .then((hours) => {
+      this.hours = <any>hours
       console.log(this.hours);
     });
   }
 
   getHour() {
     this.apiService.getHour('2')
-    .subscribe(hour => {
+    .then(hour => {
       console.log(hour);
     });
   }
