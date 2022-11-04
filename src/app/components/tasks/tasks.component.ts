@@ -19,13 +19,13 @@ export class TasksComponent implements OnInit {
   canErase = false
   activeHours = 16
   hoursLeft = {
-    domingo:this.activeHours,
-    lunes:this.activeHours,
-    martes:this.activeHours,
-    miercoles:this.activeHours,
-    jueves:this.activeHours,
-    viernes:this.activeHours,
-    sabado:this.activeHours,
+    domingo: this.activeHours,
+    lunes: this.activeHours,
+    martes: this.activeHours,
+    miercoles: this.activeHours,
+    jueves: this.activeHours,
+    viernes: this.activeHours,
+    sabado: this.activeHours,
   }
   taskCount = 0
 
@@ -34,7 +34,20 @@ export class TasksComponent implements OnInit {
     public modalCtrl: ModalController) { }
 
   ngOnInit() {
-    this.getAllTasks()
+    this.subscribeToTasks()
+  }
+
+  subscribeToTasks() {
+    this.apiService.initTasks()
+    this.apiService.tasksObs.subscribe(data => {
+      this.auxTasks = data
+      this.auxTasks.forEach((task) => {
+        task.selected = false
+      })
+      this.tasks = this.deepCopy(this.auxTasks)
+      this.updateHoursLeft()
+      console.log(this.tasks);
+    })
   }
 
   async presentModal() {
@@ -44,8 +57,8 @@ export class TasksComponent implements OnInit {
     });
     await modal.present();
     const { data } = await modal.onWillDismiss();
-    if(data?.newTask == true){
-      this.getAllTasks()
+    if (data?.newTask == true) {
+      // this.getAllTasks()
     }
   }
 
@@ -75,92 +88,81 @@ export class TasksComponent implements OnInit {
     await alert.present();
   }
 
-  eraseTask(){
+  eraseTask() {
 
   }
 
-  enableErase(){
+  enableErase() {
     this.toogleEdit = false
     this.canErase = !this.canErase
-    if(!this.canErase)
-      this.tasks.forEach(task => task.selected=false)
+    if (!this.canErase)
+      this.tasks.forEach(task => task.selected = false)
   }
 
-  updateTotal(id){
-   //console.log('called')
+  updateTotal(id) {
+    //console.log('called')
     this.tasks[id].total = 0
     let sum = 0
     const values = Object.values(this.tasks[id]);
     values.forEach(value => {
-      if(typeof value == 'number')
+      if (typeof value == 'number')
         sum += value
     })
     //console.log(sum)
     //console.log(values)
     this.tasks[id].total = sum
-    setTimeout(()=>this.updateHoursLeft(),200)
+    setTimeout(() => this.updateHoursLeft(), 200)
   }
 
-  private setHoursSum(day){
+  private setHoursSum(day) {
     let sum = 0
-    this.tasks.forEach(task=>{
+    this.tasks.forEach(task => {
       sum += task[day]
     })
     return sum
   }
 
-  updateHoursLeft(){
-    for(let day in this.hoursLeft){
+  updateHoursLeft() {
+    for (let day in this.hoursLeft) {
       this.hoursLeft[day] = this.activeHours - this.setHoursSum(day)
     }
   }
 
-  selectTask(i){
+  selectTask(i) {
     let selected = this.tasks[i].selected
-    this.tasks.forEach(task => task.selected=false)
+    this.tasks.forEach(task => task.selected = false)
     this.tasks[i].selected = true
-    if(selected)
+    if (selected)
       this.deleteTaskAlert(this.tasks[i].id)
   }
 
-  unselectAll(){
-    this.tasks.forEach(task => task.selected=false)
+  unselectAll() {
+    this.tasks.forEach(task => task.selected = false)
   }
 
-  unselectTask(i){
+  unselectTask(i) {
     console.log('blured')
     this.tasks[i].selected = false
   }
 
-  async getAllTasks() {
-    this.auxTasks = await this.apiService.getAllTasks()
-    this.auxTasks.forEach((task)=>{
-      task.selected = false
-    })
-
-    this.tasks = this.deepCopy(this.auxTasks)
-      this.updateHoursLeft()
-      console.log(this.tasks);
-  }
-
-  cancelEdit(){
+  cancelEdit() {
     this.tasks = this.deepCopy(this.auxTasks)
     this.updateHoursLeft()
     this.toogleEdit = false
   }
 
-  deepCopy(array){
+  deepCopy(array) {
     return JSON.parse(JSON.stringify(array))
   }
 
   async updateTask(task) {
-    let newTask = omit(task,['selected'])
+    let newTask = omit(task, ['selected'])
     //console.log('new',newTask)
-    await this.apiService.updateTask(task,task.id)
+    await this.apiService.updateTask(task, task.id)
   }
 
-  async updateAllTasks(){
-    for(let task of this.tasks){
+  async updateAllTasks() {
+    for (let task of this.tasks) {
       await this.updateTask(task)
     }
     this.toogleEdit = false
@@ -168,13 +170,13 @@ export class TasksComponent implements OnInit {
   }
 
   deleteTask(id: string) {
-    console.log(id,typeof id)
-    this.tasks = this.deepCopy(this.tasks.filter(task=>task.id != id))
+    console.log(id, typeof id)
+    this.tasks = this.deepCopy(this.tasks.filter(task => task.id != id))
     this.apiService.deleteTask(id)
-    .then((data) => {
-      this.getAllTasks();
-      console.log(data);
-    });
+      .then((data) => {
+        // this.getAllTasks();
+        console.log(data);
+      });
   }
 
 }

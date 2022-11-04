@@ -17,16 +17,16 @@ export class SheduleComponent implements OnInit {
   constructor(private apiService: ApiService) { }
 
   ngOnInit() {
-    this.getSchedule()
+    this.subscribeToSchedule()
   }
 
   addData(){
     //this.createTask()
   }
 
-  getSchedule() {
-    this.apiService.getSchedule()
-    .then((hours) => {
+  subscribeToSchedule(){
+    this.apiService.initSchedule()
+    this.apiService.hoursObs.subscribe(hours => {
       let date
       let difference = hoursQuantity - hours.length
       console.log(difference,hours)
@@ -37,8 +37,12 @@ export class SheduleComponent implements OnInit {
       }
       let nextHours: Hour[] = this.fillNextHours(date,difference)
       this.hours = <Hour[]>hours.concat(nextHours)
-      console.log(this.hours);
-    });
+      console.log('from observer',this.hours);
+    })
+  }
+
+  async getSchedule() {
+    await this.apiService.getSchedule()
   }
 
   fillNextHours(startHour: Date, quantity: number): Hour[]{

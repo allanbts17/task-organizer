@@ -9,7 +9,7 @@ import { ApiService } from './services/api.service';
 export class AppComponent {
   constructor(private apiService: ApiService) {}
 
-  async getAllTasks(){
-    this.apiService.getAllTasks();
+  async ngOnInit(){
+   // await this.apiService.init()
   }
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { apiService } from 'src/app/services/api.service';
+import { ApiService } from 'src/app/services/api.service';
 import { AlertController } from '@ionic/angular';
 import { ModalController } from '@ionic/angular';
 import { Task } from 'src/app/interfaces/task';
@@ -22,7 +22,7 @@ export class NewTaskFormComponent implements OnInit {
     total: 0
   }
   //nsewTask: Task
-  constructor(private apiService: apiService,
+  constructor(private apiService: ApiService,
     private alert: AlertController,
     public modalCtrl: ModalController) { }
 

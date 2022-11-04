@@ -25,26 +25,44 @@ export class ApiService {
   hoursObs: Subject<any> = new Subject<any>();;
 
   constructor(private afs: AngularFirestore) {
-    /* this.tasksCollection = afs.collection<Task>(TASKS);
-    this.scheduleCollection = afs.collection<Hour>(SCHEDULE); */
-     this.tasks = this.tasksCollection.valueChanges();
-     this.tasks.subscribe(res => {
-      console.log('change datected',res)
-     });
-    // this.hours = this.scheduleCollection.valueChanges();
-    // console.log('tsks',this.tasks)
-    // this.tasksCollection.get().subscribe(res => console.log('res',res))
+  }
+
+  public initSchedule(){
+    this.scheduleCollection = this.afs.collection<Hour>(SCHEDULE);
+    this.hours = this.scheduleCollection.valueChanges();
+    this.hours.subscribe(res => {
+      this.hoursObs.next(res);
+      console.log('change detected', res)
+    })
+  }
+
+  public initTasks(){
+    this.tasksCollection = this.afs.collection<Task>(TASKS);
+    this.tasks = this.tasksCollection.valueChanges();
+    this.tasks.subscribe(res => {
+      this.tasksObs.next(res);
+      console.log('change datected', res)
+    });
+  }
+
+  public generateID(length: number = 21) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for (var i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
   }
 
   async getAllTasks() {
     let taskArr = [];
-   // return this.afs.collection(TASKS).get().toPromise()
     const querySnapshot = await this.afs.collection(TASKS).get().toPromise()
     querySnapshot.forEach((doc: any) => {
-      taskArr.push({id:doc.id, ...doc.data()})
+      taskArr.push({ id: doc.id, ...doc.data() })
     });
     this.allTasks = taskArr;
-    this.tasksObs.next();
+    this.tasksObs.next(taskArr);
     return taskArr;
   }
 
@@ -54,7 +72,9 @@ export class ApiService {
   }
 
   async createTask(task: Task) {
-    return await this.tasksCollection.add(task);
+    const ID = this.generateID()
+    const docRef = this.tasksCollection.doc(ID)
+    return await docRef.set({id: ID, ...task})
   }
 
   async updateTask(data: any, id: string) {
@@ -67,26 +87,29 @@ export class ApiService {
     return docRef
   }
 
-  async getSchedule(): Promise<Hour[]>{
-    let sheduleArr = [];
+  async getSchedule(){// Promise<Hour[]> {
+    /*let sheduleArr = [];
     const docSnapshot = await this.afs.collection(SCHEDULE).get().toPromise()
-    console.log('snap',docSnapshot)
     docSnapshot.forEach((doc: any) => {
-      sheduleArr.push({id:doc.id, ...doc.data() })
+      sheduleArr.push({ id: doc.id, ...doc.data() })
     });
-    return sheduleArr;
+    this.allHours = sheduleArr;
+
+    return sheduleArr;*/
   }
 
-  async getHour(id: string){
+  async getHour(id: string) {
     const querySnapshot = await this.afs.collection(SCHEDULE).doc(id).get().toPromise()
     return querySnapshot.data();
   }
 
   async createHour(hour: Hour) {
-    return await this.scheduleCollection.add(hour);
+    const ID = this.generateID()
+    const docRef = this.scheduleCollection.doc(ID)
+    return await docRef.set({id: ID, ...hour})
   }
 
-  async updateHour(data: any,id: string) {
+  async updateHour(data: any, id: string) {
     const docRef = await this.scheduleCollection.doc(id).update(data)
     return docRef//await updateDoc(docRef,data);
   }
