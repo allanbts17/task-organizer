@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Task } from '../interfaces/task';
 import { Hour } from '../interfaces/hour';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { collection, doc, getDocs, setDoc, getFirestore, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
+import { BehaviorSubject } from 'rxjs';
+
 const TASKS = 'Tasks';
 const SCHEDULE = 'Schedule';
 
@@ -11,17 +13,27 @@ const SCHEDULE = 'Schedule';
   providedIn: 'root'
 })
 
-export class apiService {
+export class ApiService {
   private tasksCollection: AngularFirestoreCollection<Task>;
   private scheduleCollection: AngularFirestoreCollection<Hour>;
   tasks: Observable<Task[]>;
   hours: Observable<Hour[]>;
 
+  allTasks: Task[];
+  allHours: Hour[];
+  tasksObs: Subject<any> = new Subject<any>();
+  hoursObs: Subject<any> = new Subject<any>();;
+
   constructor(private afs: AngularFirestore) {
-    this.tasksCollection = afs.collection<Task>(TASKS);
-    this.scheduleCollection = afs.collection<Hour>(SCHEDULE);
-    //this.tasks = this.tasksCollection.valueChanges();
-    //this.hours = this.scheduleCollection.valueChanges();
+    /* this.tasksCollection = afs.collection<Task>(TASKS);
+    this.scheduleCollection = afs.collection<Hour>(SCHEDULE); */
+     this.tasks = this.tasksCollection.valueChanges();
+     this.tasks.subscribe(res => {
+      console.log('change datected',res)
+     });
+    // this.hours = this.scheduleCollection.valueChanges();
+    // console.log('tsks',this.tasks)
+    // this.tasksCollection.get().subscribe(res => console.log('res',res))
   }
 
   async getAllTasks() {
@@ -30,8 +42,9 @@ export class apiService {
     const querySnapshot = await this.afs.collection(TASKS).get().toPromise()
     querySnapshot.forEach((doc: any) => {
       taskArr.push({id:doc.id, ...doc.data()})
-      //console.log(doc.id, " => ", doc.data());
     });
+    this.allTasks = taskArr;
+    this.tasksObs.next();
     return taskArr;
   }
 

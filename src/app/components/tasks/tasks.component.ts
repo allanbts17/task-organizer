@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { apiService } from 'src/app/services/api.service';
+import { ApiService } from 'src/app/services/api.service';
 import { AlertController } from '@ionic/angular';
 import { ThrowStmt } from '@angular/compiler';
 //import  map   from 'underscore/modules/map.js'
@@ -29,7 +29,7 @@ export class TasksComponent implements OnInit {
   }
   taskCount = 0
 
-  constructor(private apiService: apiService,
+  constructor(private apiService: ApiService,
     private alert: AlertController,
     public modalCtrl: ModalController) { }
 

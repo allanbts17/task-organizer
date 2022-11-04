@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { apiService } from 'src/app/services/api.service';
+import { ApiService } from 'src/app/services/api.service';
 import { addMinutes } from 'date-fns'
 import { Hour } from 'src/app/interfaces/hour';
 import { format } from 'date-fns'
@@ -13,8 +13,8 @@ const startingHour = new Date(0, 0, 0, 6, 0, 0)
 })
 export class SheduleComponent implements OnInit {
   hours = []
-
-  constructor(private apiService: apiService) { }
+  // test = {hora: new Date(),domingo:'Juego',lunes:'Salsa',martes:'',miercoles:'Piano',jueves:'Table',viernes:'Mono',sabado:'bebe'}
+  constructor(private apiService: ApiService) { }
 
   ngOnInit() {
     this.getSchedule()
