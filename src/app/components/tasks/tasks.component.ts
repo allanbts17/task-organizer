@@ -38,8 +38,8 @@ export class TasksComponent implements OnInit {
   }
 
   subscribeToTasks() {
-    this.apiService.initTasks()
-    this.apiService.tasksObs.subscribe(data => {
+    const incomingTasks = (data) => {
+      if(data === undefined) return;
       this.auxTasks = data
       this.auxTasks.forEach((task) => {
         task.selected = false
@@ -47,7 +47,13 @@ export class TasksComponent implements OnInit {
       this.tasks = this.deepCopy(this.auxTasks)
       this.updateHoursLeft()
       console.log(this.tasks);
+    }
+
+    incomingTasks(this.apiService.initTasks())
+    this.apiService.tasksObs.subscribe(data => {
+      incomingTasks(data)
     })
+
   }
 
   async presentModal() {

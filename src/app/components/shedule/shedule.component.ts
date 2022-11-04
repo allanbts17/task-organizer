@@ -37,12 +37,8 @@ export class SheduleComponent implements OnInit {
       }
       let nextHours: Hour[] = this.fillNextHours(date,difference)
       this.hours = <Hour[]>hours.concat(nextHours)
-      console.log('from observer',this.hours);
+      // console.log('from observer',this.hours);
     })
-  }
-
-  async getSchedule() {
-    await this.apiService.getSchedule()
   }
 
   fillNextHours(startHour: Date, quantity: number): Hour[]{

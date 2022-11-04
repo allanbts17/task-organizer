@@ -4,7 +4,6 @@ import { Hour } from '../interfaces/hour';
 import { Observable, Subject } from 'rxjs';
 import { collection, doc, getDocs, setDoc, getFirestore, getDoc, updateDoc, deleteDoc } from "firebase/firestore";
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
-import { BehaviorSubject } from 'rxjs';
 
 const TASKS = 'Tasks';
 const SCHEDULE = 'Schedule';
@@ -37,10 +36,12 @@ export class ApiService {
   }
 
   public initTasks(){
+    if(this.allTasks !== undefined) return this.allTasks;
     this.tasksCollection = this.afs.collection<Task>(TASKS);
     this.tasks = this.tasksCollection.valueChanges();
     this.tasks.subscribe(res => {
       this.tasksObs.next(res);
+      this.allTasks = res;
       console.log('change datected', res)
     });
   }
@@ -55,16 +56,16 @@ export class ApiService {
     return result;
   }
 
-  async getAllTasks() {
+  /*async getAllTasks() {
     let taskArr = [];
     const querySnapshot = await this.afs.collection(TASKS).get().toPromise()
     querySnapshot.forEach((doc: any) => {
-      taskArr.push({ id: doc.id, ...doc.data() })
+      taskArr.push(doc.data())
     });
     this.allTasks = taskArr;
     this.tasksObs.next(taskArr);
     return taskArr;
-  }
+  }*/
 
   async getTask(id: string) {
     const querySnapshot = await this.afs.collection(TASKS).doc(id).get().toPromise()
@@ -85,17 +86,6 @@ export class ApiService {
   async deleteTask(id: string) {
     const docRef = await this.tasksCollection.doc(id).delete()
     return docRef
-  }
-
-  async getSchedule(){// Promise<Hour[]> {
-    /*let sheduleArr = [];
-    const docSnapshot = await this.afs.collection(SCHEDULE).get().toPromise()
-    docSnapshot.forEach((doc: any) => {
-      sheduleArr.push({ id: doc.id, ...doc.data() })
-    });
-    this.allHours = sheduleArr;
-
-    return sheduleArr;*/
   }
 
   async getHour(id: string) {

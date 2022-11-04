@@ -1,1 +1,3 @@
-<div class="bg-sky-400 h-full"></div>
+<div class="bg-sk-400 h-full">
+  <ion-button *ngFor="let task of api.allTasks" expand="full" color="medium">{{task.tarea}}</ion-button>
+</div>
