@@ -10,4 +10,5 @@ export interface Task {
   sabado: number;
   total?: number;
   selected?: boolean;
+  color?: string;
 }

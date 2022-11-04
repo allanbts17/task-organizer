@@ -13,6 +13,7 @@ const startingHour = new Date(0, 0, 0, 6, 0, 0)
 })
 export class SheduleComponent implements OnInit {
   hours = []
+  newTask;
   // test = {hora: new Date(),domingo:'Juego',lunes:'Salsa',martes:'',miercoles:'Piano',jueves:'Table',viernes:'Mono',sabado:'bebe'}
   constructor(private apiService: ApiService) { }
 
@@ -22,6 +23,12 @@ export class SheduleComponent implements OnInit {
 
   addData(){
     //this.createTask()
+  }
+
+  taskSelected(ev){
+    if(ev !== undefined){
+
+    }
   }
 
   subscribeToSchedule(){

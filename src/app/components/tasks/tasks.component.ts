@@ -48,12 +48,10 @@ export class TasksComponent implements OnInit {
       this.updateHoursLeft()
       console.log(this.tasks);
     }
-
     incomingTasks(this.apiService.initTasks())
     this.apiService.tasksObs.subscribe(data => {
       incomingTasks(data)
     })
-
   }
 
   async presentModal() {

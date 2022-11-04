@@ -2,12 +2,12 @@
   <div (click)="changeAllSel()" class="pl-2 my-2 align-middle">
     {{ format(hour.hora, "hh:mm aa") }}
   </div>
-  <div (click)="changeSel('dom')" [ngClass]="{'ring-1 ring-slate-800':selectArray.dom}" class="pl-2 my-2 align-middle">{{ hour.domingo }}</div>
-  <div (click)="changeSel('lun')" [ngClass]="{'ring-1 ring-slate-800':selectArray.lun}" class="pl-2 my-2 align-middle">{{ hour.lunes }}</div>
-  <div (click)="changeSel('mar')" [ngClass]="{'ring-1 ring-slate-800':selectArray.mar}" class="pl-2 my-2 align-middle">{{ hour.martes }}</div>
-  <div (click)="changeSel('mie')" [ngClass]="{'ring-1 ring-slate-800':selectArray.mie}" class="pl-2 my-2 align-middle">{{ hour.miercoles }}</div>
-  <div (click)="changeSel('jue')" [ngClass]="{'ring-1 ring-slate-800':selectArray.jue}" class="pl-2 my-2 align-middle">{{ hour.jueves }}</div>
-  <div (click)="changeSel('vie')" [ngClass]="{'ring-1 ring-slate-800':selectArray.vie}" class="pl-2 my-2 align-middle">{{ hour.viernes }}</div>
-  <div (click)="changeSel('sab')" [ngClass]="{'ring-1 ring-slate-800':selectArray.sab}" class="pl-2 my-2 align-middle">{{ hour.sabado }}</div>
+  <div (click)="changeSel('domingo')" [ngClass]="{'ring-1 ring-slate-800':selectArray.domingo}" class="pl-2 my-2 align-middle {{colorArray.domingo}}">{{ hour.domingo }}</div>
+  <div (click)="changeSel('lunes')" [ngClass]="{'ring-1 ring-slate-800':selectArray.lunes}" class="pl-2 my-2 align-middle {{colorArray.lunes}}">{{ hour.lunes }}</div>
+  <div (click)="changeSel('martes')" [ngClass]="{'ring-1 ring-slate-800':selectArray.martes}" class="pl-2 my-2 align-middle {{colorArray.martes}}">{{ hour.martes }}</div>
+  <div (click)="changeSel('miercoles')" [ngClass]="{'ring-1 ring-slate-800':selectArray.miercoles}" class="pl-2 my-2 align-middle {{colorArray.miercoles}}">{{ hour.miercoles }}</div>
+  <div (click)="changeSel('jueves')" [ngClass]="{'ring-1 ring-slate-800':selectArray.jueves}" class="pl-2 my-2 align-middle {{colorArray.jueves}}">{{ hour.jueves }}</div>
+  <div (click)="changeSel('viernes')" [ngClass]="{'ring-1 ring-slate-800':selectArray.viernes}" class="pl-2 my-2 align-middle {{colorArray.viernes}}">{{ hour.viernes }}</div>
+  <div (click)="changeSel('sabado')" [ngClass]="{'ring-1 ring-slate-800':selectArray.sabado}" class="pl-2 my-2 align-middle {{colorArray.sabado}}">{{ hour.sabado }}</div>
 </div>
 

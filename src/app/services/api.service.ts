@@ -40,8 +40,8 @@ export class ApiService {
     this.tasksCollection = this.afs.collection<Task>(TASKS);
     this.tasks = this.tasksCollection.valueChanges();
     this.tasks.subscribe(res => {
-      this.tasksObs.next(res);
       this.allTasks = res;
+      this.tasksObs.next(res);
       console.log('change datected', res)
     });
   }

@@ -1,3 +1,10 @@
-<div class="bg-sk-400 h-full">
-  <ion-button *ngFor="let task of api.allTasks" expand="full" color="medium">{{task.tarea}}</ion-button>
+<div class="bg-sk-400 h-full space-y-1">
+  <button (click)="obs.selectNewTask()" class="ion-activatable relative overflow-hidden w-full py-2 shadow-md">
+    <ion-ripple-effect></ion-ripple-effect>
+    <ion-text>Limpiar</ion-text>
+  </button>
+  <button (click)="obs.selectNewTask(task)" *ngFor="let task of apiService.allTasks" class="ion-activatable relative overflow-hidden w-full py-2 {{task.color}}">
+    <ion-ripple-effect></ion-ripple-effect>
+    <ion-text>{{task.tarea}}</ion-text>
+  </button>
 </div>
