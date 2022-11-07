@@ -1,6 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { format } from 'date-fns';
+import { ApiService } from 'src/app/services/api.service';
 import { ObservablesService } from 'src/app/services/observables.service';
+import { take } from 'rxjs/operators';
+import { Task } from 'src/app/interfaces/task';
+import { Hour } from 'src/app/interfaces/hour';
 
 @Component({
   selector: 'app-schedule-row',
@@ -8,7 +12,8 @@ import { ObservablesService } from 'src/app/services/observables.service';
   styleUrls: ['./schedule-row.component.scss'],
 })
 export class ScheduleRowComponent implements OnInit {
-  @Input() hour
+  @Input() hour: Hour
+  oldHour: Hour
   selectArray = {
     domingo: false,
     lunes: false,
@@ -19,47 +24,76 @@ export class ScheduleRowComponent implements OnInit {
     sabado: false
   }
   allSelect = false
+  hasChanged = false
 
-  colorArray = {
-    domingo: '',
-    lunes: '',
-    martes: '',
-    miercoles: '',
-    jueves: '',
-    viernes: '',
-    sabado: ''
-  }
-  constructor(private obs: ObservablesService) {
-    obs.newTask.subscribe(task => {
-      if (task !== undefined) {
-        // entry => [key,value] => [day,selected]
-        let entries = Object.entries(this.selectArray)
-        entries.forEach(entry => {
-          if (entry[1]) {
-            this.hour[entry[0]] = task.tarea
-            this.colorArray[entry[0]] = task.color
-          }
-        })
-      } else {
-        let entries = Object.entries(this.selectArray)
-        entries.forEach(entry => {
-          if (entry[1]) {
-            this.hour[entry[0]] = ''
-            this.colorArray[entry[0]] = ''
-          }
-        })
+  constructor(private obs: ObservablesService,
+    private apiService: ApiService) {
+    obs.newTask.subscribe((task) => {
+      console.log('hellooou')
+      this.recivedATask(task)
+    })
+
+    obs.clearScheduleSelection.subscribe(()=>{
+      this.unSelectAll()
+    })
+
+    obs.saveScheduleChanges.subscribe(async ()=>{
+      if(this.hasChanged){
+        await apiService.updateHour(this.hour,this.hour.id)
+        this.oldHour = Object.assign({},this.hour)
       }
-      this.unSelectAll();
+    })
+
+    obs.clearScheduleSelection.subscribe(()=> {
+      this.cancelChanges()
     })
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.oldHour = Object.assign({},this.hour)
+  }
+
+  cancelChanges(){
+    this.unSelectAll()
+    if(this.hasChanged){
+      this.hour = Object.assign({},this.oldHour)
+      this.hasChanged = false
+    }
+
+  }
+
+  recivedATask(task){
+    if (task !== undefined) {
+      // entry => [key,value] => [day,selected]
+      let entries = Object.entries(this.selectArray)
+      entries.forEach(entry => {
+        if (entry[1]) {
+          this.hasChanged = true
+          this.hour[entry[0]] = task.tarea
+        }
+      })
+    } else {
+      let entries = Object.entries(this.selectArray)
+      entries.forEach(entry => {
+        if (entry[1]) {
+          this.hasChanged = true
+          this.hour[entry[0]] = ''
+        }
+      })
+    }
+    this.unSelectAll();
+  }
+
+  getTaskColor(taskName: string): string{
+    return this.apiService.allTasks?.find(tsk => tsk.tarea === taskName)?.color || ''
+  }
 
   format(date, pattern) {
     return format(new Date(date), pattern)
   }
 
-  changeSel(day: string) {
+  // TODO: On production, change mousedown for touchstart
+  changeSel(day: string,) {
     this.selectArray[day] = !this.selectArray[day]
     this.allSelect = false
     // console.log(this.selectArray[day])

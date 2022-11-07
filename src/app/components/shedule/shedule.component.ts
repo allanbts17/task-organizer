@@ -14,6 +14,7 @@ const startingHour = new Date(0, 0, 0, 6, 0, 0)
 export class SheduleComponent implements OnInit {
   hours = []
   newTask;
+  canFill = true
   // test = {hora: new Date(),domingo:'Juego',lunes:'Salsa',martes:'',miercoles:'Piano',jueves:'Table',viernes:'Mono',sabado:'bebe'}
   constructor(private apiService: ApiService) { }
 
@@ -36,14 +37,22 @@ export class SheduleComponent implements OnInit {
     this.apiService.hoursObs.subscribe(hours => {
       let date
       let difference = hoursQuantity - hours.length
-      console.log(difference,hours)
       if(hours.length > 0){
-        date = new Date(hours[-1].hora)
+        date = new Date(hours[hours.length-1].hora)
       } else {
         date = startingHour
       }
       let nextHours: Hour[] = this.fillNextHours(date,difference)
+
+      if(difference > 0){
+        for(let hour of nextHours){
+          this.apiService.hoursObs.unsubscribe()
+          this.apiService.createHour(hour)
+        }
+        this.subscribeToSchedule()
+      }
       this.hours = <Hour[]>hours.concat(nextHours)
+
       // console.log('from observer',this.hours);
     })
   }

@@ -7,11 +7,23 @@ import { Task } from '../interfaces/task';
 })
 export class ObservablesService {
   newTask: Subject<Task> = new Subject<Task>();
-
+  clearScheduleSelection: Subject<undefined> = new Subject<undefined>();
+  saveScheduleChanges: Subject<undefined> = new Subject<undefined>();
+  toogleScheduleCancel = false;
+  toogleSave = false
   constructor() { }
 
   selectNewTask(task?: Task){
+    console.log('new task selected',task)
     this.newTask.next(task);
+  }
+
+  doClearScheduleSelection(){
+    this.clearScheduleSelection.next()
+  }
+
+  doSaveScheduleChanges(){
+    this.saveScheduleChanges.next()
   }
 
 }

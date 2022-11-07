@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ObservablesService } from '../services/observables.service';
 
 
 @Component({
@@ -7,7 +8,16 @@ import { Component } from '@angular/core';
   styleUrls: ['tab1.page.scss']
 })
 export class Tab1Page {
+  toogleUnSelect = true
+  toogleSave = true
+  constructor(private obs: ObservablesService) {}
 
-  constructor() {}
+  clearSel(){
+    this.obs.doClearScheduleSelection()
+  }
+
+  save(){
+    this.obs.doSaveScheduleChanges()
+  }
 
 }

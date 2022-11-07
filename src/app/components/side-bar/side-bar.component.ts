@@ -44,16 +44,35 @@ export class SideBarComponent implements OnInit {
     })
 }
 
-  fillColors(){
-    let aux = Object.assign([],this.colorList)
+  async fillColors(){
+    let colors = Object.assign([],this.colorList)
+    // First remove used colors
     for(const ind in this.apiService.allTasks){
-      let color = aux.pop()
-      if(color === undefined){
-        aux = Object.assign({},this.colorList)
-        color = aux.pop()
+      if(this.apiService.allTasks[ind].color !== undefined){
+        colors = this.removeItemOnce(colors,this.apiService.allTasks[ind].color)
       }
-      this.apiService.allTasks[ind].color = `bg-${color}-500`
     }
+    let clearedColors = Object.assign([],colors)
+
+    for(const ind in this.apiService.allTasks){
+      let color = colors.pop()
+      if(color === undefined){
+        colors = Object.assign({},clearedColors)
+        color = colors.pop()
+      }
+      if(this.apiService.allTasks[ind].color === undefined){
+        let id =  this.apiService.allTasks[ind].id
+        this.apiService.updateTask({ color: `bg-${color}-500`},id)
+      }
+    }
+  }
+
+  removeItemOnce(arr, value) {
+    var index = arr.indexOf(value);
+    if (index > -1) {
+      arr.splice(index, 1);
+    }
+    return arr;
   }
 
   subscribeToTasks() {

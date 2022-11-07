@@ -3,6 +3,17 @@
     <ion-title>
       Horario
     </ion-title>
+
+    <ion-buttons slot="primary">
+      <ion-button *ngIf="toogleUnSelect" size="small" shape="round" fill="outline" color="primary" (click)="clearSel()">
+        <ion-icon slot="icon-only" name="create"></ion-icon>
+        <ion-label>Cancelar</ion-label>
+      </ion-button>
+      <ion-button *ngIf="toogleSave" size="small" shape="round" fill="outline" color="primary" (click)="save()">
+        <ion-icon slot="icon-only" name="create"></ion-icon>
+        <ion-label>Guardar</ion-label>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
