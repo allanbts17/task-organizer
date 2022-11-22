@@ -31,18 +31,20 @@ export class ScheduleRowComponent implements OnInit {
   constructor(private obs: ObservablesService,
     private apiService: ApiService) {
     obs.newTask.subscribe((task) => {
-      console.log('hellooou')
       this.recivedATask(task)
     })
 
     obs.clearScheduleSelection.subscribe(() => {
       this.unSelectAll()
+      obs.toogleScheduleCancel = false;
+      obs.toogleSave = false;
     })
 
     obs.saveScheduleChanges.subscribe(async () => {
       if (this.hasChanged) {
         await apiService.updateHour(this.hour, this.hour.id)
         this.oldHour = Object.assign({}, this.hour)
+        obs.toogleSave = false;
       }
     })
 
@@ -83,6 +85,7 @@ export class ScheduleRowComponent implements OnInit {
         }
       })
     }
+    this.obs.toogleSave = true
     this.unSelectAll();
   }
 
@@ -100,6 +103,7 @@ export class ScheduleRowComponent implements OnInit {
       this.selectArray[day] = !this.selectArray[day]
       this.allSelect = false
       this.actualTmo = undefined;
+      this.obs.toogleScheduleCancel = true;
     }, 100)
 
     // console.log(this.selectArray[day])

@@ -5,11 +5,11 @@
     </ion-title>
 
     <ion-buttons slot="primary">
-      <ion-button *ngIf="toogleUnSelect" size="small" shape="round" fill="outline" color="primary" (click)="clearSel()">
+      <ion-button *ngIf="obs.toogleScheduleCancel" size="small" shape="round" fill="outline" color="primary" (click)="clearSel()">
         <ion-icon slot="icon-only" name="create"></ion-icon>
         <ion-label>Cancelar</ion-label>
       </ion-button>
-      <ion-button *ngIf="toogleSave" size="small" shape="round" fill="outline" color="primary" (click)="save()">
+      <ion-button *ngIf="obs.toogleSave" size="small" shape="round" fill="outline" color="primary" (click)="save()">
         <ion-icon slot="icon-only" name="create"></ion-icon>
         <ion-label>Guardar</ion-label>
       </ion-button>

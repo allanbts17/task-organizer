@@ -10,7 +10,7 @@ import { ObservablesService } from '../services/observables.service';
 export class Tab1Page {
   toogleUnSelect = true
   toogleSave = true
-  constructor(private obs: ObservablesService) {}
+  constructor(public obs: ObservablesService) {}
 
   clearSel(){
     this.obs.doClearScheduleSelection()
