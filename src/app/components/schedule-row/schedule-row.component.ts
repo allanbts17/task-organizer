@@ -59,6 +59,7 @@ export class ScheduleRowComponent implements OnInit {
 
   cancelChanges() {
     this.unSelectAll()
+    this.obs.toogleTaskBar = false
     if (this.hasChanged) {
       this.hour = Object.assign({}, this.oldHour)
       this.hasChanged = false
@@ -104,6 +105,7 @@ export class ScheduleRowComponent implements OnInit {
       this.allSelect = false
       this.actualTmo = undefined;
       this.obs.toogleScheduleCancel = true;
+      this.obs.toogleTaskBar = true
     }, 100)
 
     // console.log(this.selectArray[day])

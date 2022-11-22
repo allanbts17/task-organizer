@@ -3,11 +3,11 @@
     {{ format(hour.hora, "hh:mm aa") }}
   </div>
   <div (touchstart)="changeSel('domingo')" (touchmove)="drag('domingo')" [ngClass]="{'ring-2 ring-slate-800':selectArray.domingo}" class="px-2 align-middle {{getTaskColor(hour.domingo)}}">{{ hour.domingo }}</div>
-  <div (touchstart)="changeSel('lunes')" [ngClass]="{'ring-2 ring-slate-800':selectArray.lunes}" class="px-2 align-middle {{getTaskColor(hour.lunes)}}">{{ hour.lunes }}</div>
-  <div (touchstart)="changeSel('martes')" [ngClass]="{'ring-2 ring-slate-800':selectArray.martes}" class="px-2 align-middle {{getTaskColor(hour.martes)}}">{{ hour.martes }}</div>
-  <div (touchstart)="changeSel('miercoles')" [ngClass]="{'ring-2 ring-slate-800':selectArray.miercoles}" class="px-2 align-middle {{getTaskColor(hour.miercoles)}}">{{ hour.miercoles }}</div>
-  <div (touchstart)="changeSel('jueves')" [ngClass]="{'ring-2 ring-slate-800':selectArray.jueves}" class="px-2 align-middle {{getTaskColor(hour.jueves)}}">{{ hour.jueves }}</div>
-  <div (touchstart)="changeSel('viernes')" [ngClass]="{'ring-2 ring-slate-800':selectArray.viernes}" class="px-2 align-middle {{getTaskColor(hour.viernes)}}">{{ hour.viernes }}</div>
-  <div (touchstart)="changeSel('sabado')" [ngClass]="{'ring-2 ring-slate-800':selectArray.sabado}" class="px-2 align-middle {{getTaskColor(hour.sabado)}}">{{ hour.sabado }}</div>
+  <div (touchstart)="changeSel('lunes')" (touchmove)="drag('lunes')" [ngClass]="{'ring-2 ring-slate-800':selectArray.lunes}" class="px-2 align-middle {{getTaskColor(hour.lunes)}}">{{ hour.lunes }}</div>
+  <div (touchstart)="changeSel('martes')" (touchmove)="drag('martes')" [ngClass]="{'ring-2 ring-slate-800':selectArray.martes}" class="px-2 align-middle {{getTaskColor(hour.martes)}}">{{ hour.martes }}</div>
+  <div (touchstart)="changeSel('miercoles')" (touchmove)="drag('miercoles')" [ngClass]="{'ring-2 ring-slate-800':selectArray.miercoles}" class="px-2 align-middle {{getTaskColor(hour.miercoles)}}">{{ hour.miercoles }}</div>
+  <div (touchstart)="changeSel('jueves')" (touchmove)="drag('jueves')" [ngClass]="{'ring-2 ring-slate-800':selectArray.jueves}" class="px-2 align-middle {{getTaskColor(hour.jueves)}}">{{ hour.jueves }}</div>
+  <div (touchstart)="changeSel('viernes')" (touchmove)="drag('viernes')" [ngClass]="{'ring-2 ring-slate-800':selectArray.viernes}" class="px-2 align-middle {{getTaskColor(hour.viernes)}}">{{ hour.viernes }}</div>
+  <div (touchstart)="changeSel('sabado')" (touchmove)="drag('sabado')" [ngClass]="{'ring-2 ring-slate-800':selectArray.sabado}" class="px-2 align-middle {{getTaskColor(hour.sabado)}}">{{ hour.sabado }}</div>
 </div>
 

@@ -11,6 +11,7 @@ export class ObservablesService {
   saveScheduleChanges: Subject<undefined> = new Subject<undefined>();
   toogleScheduleCancel = false;
   toogleSave = false
+  toogleTaskBar = false
   constructor() { }
 
   selectNewTask(task?: Task){

@@ -3,6 +3,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { addMinutes } from 'date-fns'
 import { Hour } from 'src/app/interfaces/hour';
 import { format } from 'date-fns'
+import { ObservablesService } from 'src/app/services/observables.service';
 
 const hoursQuantity = 37
 const startingHour = new Date(0, 0, 0, 6, 0, 0)
@@ -16,7 +17,8 @@ export class SheduleComponent implements OnInit {
   newTask;
   canFill = true
   // test = {hora: new Date(),domingo:'Juego',lunes:'Salsa',martes:'',miercoles:'Piano',jueves:'Table',viernes:'Mono',sabado:'bebe'}
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService,
+    public obs: ObservablesService) { }
 
   ngOnInit() {
     this.subscribeToSchedule()

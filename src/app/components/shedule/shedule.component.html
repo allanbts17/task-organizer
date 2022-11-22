@@ -20,7 +20,7 @@
         </div>
       </div>
     </div>
-    <div class="h-full w-2/12 flex-none">
+    <div *ngIf="obs.toogleTaskBar" class="h-full w-3/12 flex-none">
       <app-side-bar (taskSelected)="taskSelected($event)"></app-side-bar>
     </div>
   </div>
