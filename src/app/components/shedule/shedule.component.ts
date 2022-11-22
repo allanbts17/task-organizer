@@ -52,7 +52,9 @@ export class SheduleComponent implements OnInit {
         this.subscribeToSchedule()
       }
       this.hours = <Hour[]>hours.concat(nextHours)
-
+      this.hours.sort((hrA:Hour,hrB:Hour) => {
+        return new Date(hrA.hora).getTime() - new Date(hrB.hora).getTime()
+      })
       // console.log('from observer',this.hours);
     })
   }

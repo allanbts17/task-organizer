@@ -1,6 +1,6 @@
 {
-	"appId": "io.ionic.starter",
-	"appName": "task-organizer-app",
+	"appId": "com.taskorganizer.app",
+	"appName": "Task Organizer",
 	"webDir": "www",
 	"bundledWebRuntime": false
 }

@@ -2,7 +2,7 @@
   <div (touchstart)="changeAllSel()" class="px-2 align-middle">
     {{ format(hour.hora, "hh:mm aa") }}
   </div>
-  <div (touchstart)="changeSel('domingo')" [ngClass]="{'ring-2 ring-slate-800':selectArray.domingo}" class="px-2 align-middle {{getTaskColor(hour.domingo)}}">{{ hour.domingo }}</div>
+  <div (touchstart)="changeSel('domingo')" (touchmove)="drag('domingo')" [ngClass]="{'ring-2 ring-slate-800':selectArray.domingo}" class="px-2 align-middle {{getTaskColor(hour.domingo)}}">{{ hour.domingo }}</div>
   <div (touchstart)="changeSel('lunes')" [ngClass]="{'ring-2 ring-slate-800':selectArray.lunes}" class="px-2 align-middle {{getTaskColor(hour.lunes)}}">{{ hour.lunes }}</div>
   <div (touchstart)="changeSel('martes')" [ngClass]="{'ring-2 ring-slate-800':selectArray.martes}" class="px-2 align-middle {{getTaskColor(hour.martes)}}">{{ hour.martes }}</div>
   <div (touchstart)="changeSel('miercoles')" [ngClass]="{'ring-2 ring-slate-800':selectArray.miercoles}" class="px-2 align-middle {{getTaskColor(hour.miercoles)}}">{{ hour.miercoles }}</div>

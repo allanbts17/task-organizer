@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">task-organizer-app</string>
-    <string name="title_activity_main">task-organizer-app</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">Task Organizer</string>
+    <string name="title_activity_main">Task Organizer</string>
+    <string name="package_name">com.taskorganizer.app</string>
+    <string name="custom_url_scheme">com.taskorganizer.app</string>
 </resources>
