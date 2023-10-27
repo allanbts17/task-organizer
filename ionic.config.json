@@ -1,0 +1,7 @@
+{
+  "name": "task-organizer",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
