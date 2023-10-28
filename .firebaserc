@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "task-organizer-a0ab1": {
+      "hosting": {
+        "app": [
+          "task-organizer-a0ab1"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "task-organizer-a0ab1"
+  }
+}

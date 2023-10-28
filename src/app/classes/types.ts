@@ -1,0 +1,2 @@
+export type taskType = 'id'|'tarea'|'domingo'|'lunes'|'martes'|'miercoles'|'jueves'|'viernes'|'sabado'|'total'|'selected'|'color'
+export type onlyDayTaskType = 'domingo'|'lunes'|'martes'|'miercoles'|'jueves'|'viernes'|'sabado'

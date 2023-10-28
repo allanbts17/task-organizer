@@ -1,0 +1,188 @@
+import { Component, OnInit } from '@angular/core';
+import { ApiService } from 'src/app/services/api.service';
+import { AlertController } from '@ionic/angular';
+//import { ThrowStmt } from '@angular/compiler';
+//import  map   from 'underscore/modules/map.js'
+import { map, omit } from 'underscore';
+import { ModalController } from '@ionic/angular';
+import { NewTaskFormComponent } from '../new-task-form/new-task-form.component';
+import { Task } from 'src/app/interfaces/task';
+import { onlyDayTaskType, taskType } from 'src/app/classes/types';
+
+@Component({
+  selector: 'app-tasks',
+  templateUrl: './tasks.component.html',
+  styleUrls: ['./tasks.component.scss'],
+})
+export class TasksComponent implements OnInit {
+  tasks: Task[] = []
+  auxTasks = []
+  toogleEdit = false
+  canErase = false
+  activeHours = 16
+  hoursLeft = {
+    domingo: this.activeHours,
+    lunes: this.activeHours,
+    martes: this.activeHours,
+    miercoles: this.activeHours,
+    jueves: this.activeHours,
+    viernes: this.activeHours,
+    sabado: this.activeHours,
+  }
+  taskCount = 0
+
+  constructor(private apiService: ApiService,
+    private alert: AlertController,
+    public modalCtrl: ModalController) { }
+
+  ngOnInit() {
+    this.subscribeToTasks()
+  }
+
+  subscribeToTasks() {
+    const incomingTasks = (data: any) => {
+      if(data === undefined) return;
+      this.auxTasks = data
+      this.auxTasks.forEach((task: Task) => {
+        task.selected = false
+      })
+      this.tasks = this.deepCopy(this.auxTasks)
+      this.updateHoursLeft()
+      console.log(this.tasks);
+    }
+    incomingTasks(this.apiService.initTasks())
+    this.apiService.tasksObs.subscribe(data => {
+      incomingTasks(data)
+    })
+  }
+
+  async presentModal() {
+    const modal = await this.modalCtrl.create({
+      component: NewTaskFormComponent,
+      cssClass: 'my-custom-class'
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    if (data?.newTask == true) {
+      // this.getAllTasks()
+    }
+  }
+
+  async deleteTaskAlert(id: string) {
+    const alert = await this.alert.create({
+      cssClass: 'my-custom-class',
+      header: 'Eliminar tarea',
+      message: '¿Seguro que quieres eliminar esta tarea?',
+      buttons: [
+        {
+          text: 'No',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Si',
+          handler: () => {
+            this.deleteTask(id)
+            console.log('Confirm Okay');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  eraseTask() {
+
+  }
+
+  enableErase() {
+    this.toogleEdit = false
+    this.canErase = !this.canErase
+    if (!this.canErase)
+      this.tasks.forEach(task => task.selected = false)
+  }
+
+  updateTotal(id: number) {
+    //console.log('called')
+    this.tasks[id].total = 0
+    let sum = 0
+    const values = Object.values(this.tasks[id]);
+    values.forEach(value => {
+      if (typeof value == 'number')
+        sum += value
+    })
+    //console.log(sum)
+    //console.log(values)
+    this.tasks[id].total = sum
+    setTimeout(() => this.updateHoursLeft(), 200)
+  }
+
+  private setHoursSum(day: onlyDayTaskType) {
+    let sum = 0
+    this.tasks.forEach(task => {
+      sum += task[day]
+    })
+    return sum
+  }
+
+  updateHoursLeft() {
+    for (let day in this.hoursLeft) {
+      this.hoursLeft[<onlyDayTaskType>day] = this.activeHours - this.setHoursSum(<onlyDayTaskType>day)
+    }
+  }
+
+  selectTask(i: number) {
+    let selected = this.tasks[i].selected
+    this.tasks.forEach(task => task.selected = false)
+    this.tasks[i].selected = true
+    if (selected)
+      this.deleteTaskAlert(<string>this.tasks[i].id)
+  }
+
+  unselectAll() {
+    this.tasks.forEach(task => task.selected = false)
+  }
+
+  unselectTask(i: number) {
+    console.log('blured')
+    this.tasks[i].selected = false
+  }
+
+  cancelEdit() {
+    this.tasks = this.deepCopy(this.auxTasks)
+    this.updateHoursLeft()
+    this.toogleEdit = false
+  }
+
+  deepCopy(array: any) {
+    return JSON.parse(JSON.stringify(array))
+  }
+
+  async updateTask(task: Task) {
+    let newTask = omit(task, ['selected'])
+    //console.log('new',newTask)
+    await this.apiService.updateTask(task, <string>task.id)
+  }
+
+  async updateAllTasks() {
+    for (let task of this.tasks) {
+      await this.updateTask(task)
+    }
+    this.toogleEdit = false
+    //this.tasks.forEach(task => this.updateTask(task))
+  }
+
+  deleteTask(id: string) {
+    console.log(id, typeof id)
+    this.tasks = this.deepCopy(this.tasks.filter(task => task.id != id))
+    this.apiService.deleteTask(id)
+      .then((data) => {
+        // this.getAllTasks();
+        console.log(data);
+      });
+  }
+
+}

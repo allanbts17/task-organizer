@@ -1,0 +1,28 @@
+<ion-content>
+  <div class="flex w-full h-full">
+    <div class="overflow-x-auto schedule flex-1">
+      <div class="divide-y" style="min-width: 800px">
+        <div
+          class="grid grid-cols-8 font-extrabold text-white bg-emerald-700 rounded-t-xl overflow-hidden"
+        >
+          <div class="pl-2 my-2">Hora</div>
+          <div class="pl-2 my-2">Domingo</div>
+          <div class="pl-2 my-2">Lunes</div>
+          <div class="pl-2 my-2">Martes</div>
+          <div class="pl-2 my-2">Miércoles</div>
+          <div class="pl-2 my-2">Jueves</div>
+          <div class="pl-2 my-2">Viernes</div>
+          <div class="pl-2 my-2">Sábado</div>
+        </div>
+
+        <div *ngFor="let hour of hours">
+          <app-schedule-row [hour]="hour"></app-schedule-row>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="obs.toogleTaskBar" class="h-full w-3/12 flex-none">
+      <app-side-bar (taskSelected)="taskSelected($event)"></app-side-bar>
+    </div>
+  </div>
+
+</ion-content>
